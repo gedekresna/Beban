@@ -3,8 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Users;
+use Illuminate\Http\Request;
+use App\Helpers\ApiFormatter;
+// use GuzzleHttp\Psr7\Request;
+use App\Helepers\ClientResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
 {
@@ -18,15 +25,43 @@ class UsersController extends Controller
         //
     }
 
+    public function login(Request $request){
+        $credentials =  $request->validate([
+            'email' => 'required|email:rfc,dns',
+            'password' => 'required',
+        ]);
+
+        if(!Auth::attempt($credentials)){
+            // $request->session()->regenerate();
+            return ClientResponse::errorResponse(Response::HTTP_UNAUTHORIZED, 'Unauthorized access');
+        }
+        $user = Users::where('email', $credentials['email'])->firstOrFail();
+        $token = $user->createToken('web-token')->plainTextToken;
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Login Success', ['access_token' => $token, 'type' => 'Bearer']);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function register(Request $request)
     {
-        //
+        $user = $request->validate([
+            'name' => 'required|max:255',
+            'username' => ['required','min:3','max:255','unique:users'],
+            'role' => 'required',
+            'email' => 'required|email:rfc,dns|unique:users',
+            'password' => 'required|min:5|max:255'
+        ]);
+
+        $user['password'] = Hash::make($user['password']);
+
+        $token =  Users::create($user)->createToken('web-token')->plainTextToken;
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Registration Success', ['access_token' => $token, 'type' => 'Bearer']);
+
     }
+    
 
     /**
      * Store a newly created resource in storage.
