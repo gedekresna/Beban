@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Helepers;
+namespace App\Helpers;
 
 class ClientResponse{
 
-    public function successResponse($status,$message,$data = null){
-        return response()->json()([
+    public static function successResponse($status,$message,$data = null){
+        return response()->json([
             'status' => $status,
             'message' => $message,
             'data' => $data
         ],$status);
     }
 
-    public function errorResponse($status,$message){
-        return response()->json()([
+    public static function errorResponse($status,$message){
+        return response()->json([
             'status' => $status,
             'message' => $message,
         ],$status);
