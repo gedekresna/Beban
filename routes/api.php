@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DisastersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
@@ -21,3 +22,9 @@ use App\Http\Controllers\UsersController;
 
 Route::post('/login',[UsersController::class,'login']);
 Route::post('/register',[UsersController::class,'register']);
+
+Route::get('/disasters',[DisastersController::class,'index']);
+Route::post('/disasters',[DisastersController::class,'post']);
+Route::get('/disasters/{id}',[DisastersController::class,'show']);
+Route::put('/disasters/{id}',[DisastersController::class,'update']);
+Route::delete('/disasters/{id}',[DisastersController::class,'delete']);
