@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +19,5 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('/login',[UserController::class,'login']);
-Route::post('/register',[UserController::class,'register']);
+Route::post('/login',[UsersController::class,'login']);
+Route::post('/register',[UsersController::class,'register']);

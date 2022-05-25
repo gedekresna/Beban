@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Users;
 use Illuminate\Http\Request;
-use App\Helpers\ApiFormatter;
 // use GuzzleHttp\Psr7\Request;
-use App\Helepers\ClientResponse;
+use App\Helpers\ClientResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
@@ -26,16 +26,19 @@ class UsersController extends Controller
     }
 
     public function login(Request $request){
-        $credentials =  $request->validate([
+
+        $validator = Validator::make($request->all(),[
             'email' => 'required|email:rfc,dns',
             'password' => 'required',
         ]);
-
-        if(!Auth::attempt($credentials)){
-            // $request->session()->regenerate();
+        if($validator->fails()){
+            return $validator->errors();
+        }
+        $data = $validator->validated();
+        if(!Auth::attempt($data)){
             return ClientResponse::errorResponse(Response::HTTP_UNAUTHORIZED, 'Unauthorized access');
         }
-        $user = Users::where('email', $credentials['email'])->firstOrFail();
+        $user = Users::where('email', $data['email'])->firstOrFail();
         $token = $user->createToken('web-token')->plainTextToken;
         return ClientResponse::successResponse(Response::HTTP_OK, 'Login Success', ['access_token' => $token, 'type' => 'Bearer']);
     }
@@ -47,17 +50,19 @@ class UsersController extends Controller
      */
     public function register(Request $request)
     {
-        $user = $request->validate([
+        $validator = Validator::make($request->all(),[
             'name' => 'required|max:255',
-            'username' => ['required','min:3','max:255','unique:users'],
-            'role' => 'required',
             'email' => 'required|email:rfc,dns|unique:users',
             'password' => 'required|min:5|max:255'
         ]);
+        if($validator->fails()){
+            return $validator->errors();
+        }
+        
+        $data = $validator->validated();
+        $data['password'] = Hash::make($data['password']);
 
-        $user['password'] = Hash::make($user['password']);
-
-        $token =  Users::create($user)->createToken('web-token')->plainTextToken;
+        $token =  Users::create($data)->createToken('web-token')->plainTextToken;
         return ClientResponse::successResponse(Response::HTTP_OK, 'Registration Success', ['access_token' => $token, 'type' => 'Bearer']);
 
     }

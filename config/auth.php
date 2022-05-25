@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Users;
+
 return [
 
     /*
@@ -107,5 +109,12 @@ return [
     */
 
     'password_timeout' => 10800,
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Users::class,
+        ],
+    ],
 
 ];
