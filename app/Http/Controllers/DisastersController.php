@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Disasters;
+use App\Models\ManyDisasters;
 use Illuminate\Http\Request;
 use App\Helpers\ClientResponse;
 use App\Http\Requests\StoreDisastersRequest;
@@ -38,20 +39,27 @@ class DisastersController extends Controller
      * @param  \App\Http\Requests\StoreDisastersRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreDisastersRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->only(['description', 'postal_code', 'city', 'latitude', 'longitude', 'user_id']);
-        if($request->user()->cannot('create',Disasters::class)){
-            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to create resource');
-        }
+        $data = $request->only(['address', 'description', 'postal_code', 'city', 'latitude', 'longitude', 'user_id', 'disaster_type_id']);
+        // if($request->user()->cannot('create',Disasters::class)){
+        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to create resource');
+        // }
+        // dd($data);
         $disasters = Disasters::create([
-            'description' => $data['description'],
-            'city' => $data['city'],
-            'postal_code' => $data['postal_code'],
+            'user_id' => auth()->id(),
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
-            'user_id' => auth()->id()
+            'address' => $data['address'],
+            'postal_code' => $data['postal_code'],
+            'description' => $data['description']
         ]);
+
+        $manydisasters = ManyDisasters::create([
+            'disaster_id' => $disasters->id,
+            'disaster_type_id' => $data['disaster_type_id']
+        ]);
+
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success create location', $disasters);
 
     }
@@ -65,9 +73,9 @@ class DisastersController extends Controller
     public function show($id,Request $request)
     {
         $disasters = Disasters::findOrFail($id);
-        if($request->user()->cannot('view', $disasters)){
-            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to see this resource');
-        }
+        // if($request->user()->cannot('view', $disasters)){
+        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to see this resource');
+        // }
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success get location', $disasters);
     }
 
@@ -93,9 +101,9 @@ class DisastersController extends Controller
     {
         $data = $request->only(['description', 'city', 'postal_code', 'latitude', 'longitude']);
         $disasters = Disasters::findOrFail($id);
-        if($request->user()->cannot('update', $disasters)){
-            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update this resource');
-        }
+        // if($request->user()->cannot('update', $disasters)){
+        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update this resource');
+        // }
         $disasters->update($data);
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success update location', $disasters);
     }
@@ -109,9 +117,9 @@ class DisastersController extends Controller
     public function destroy(Request $request, $id)
     {
         $disasters = Disasters::findOrFail($id);
-        if($request->user()->cannot('delete', $disasters)){
-            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this resource');
-        }
+        // if($request->user()->cannot('delete', $disasters)){
+        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this resource');
+        // }
         $disasters->delete();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success delete location', $disasters);
     }

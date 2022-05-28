@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\DisasterTypes;
+use Illuminate\Http\Request;
+use App\Helpers\ClientResponse;
 use App\Http\Requests\StoreDisasterTypesRequest;
 use App\Http\Requests\UpdateDisasterTypesRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class DisasterTypesController extends Controller
 {
@@ -34,9 +37,17 @@ class DisasterTypesController extends Controller
      * @param  \App\Http\Requests\StoreDisasterTypesRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreDisasterTypesRequest $request)
+    public function store(Request $request)
     {
-        //
+        $data = $request->only(['name']);
+        // if($request->user()->cannot('create',Disasters::class)){
+        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to create resource');
+        // }
+        $disasterType = DisasterTypes::create([
+            'name' => $data['name']
+        ]);
+
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Success create disaster type', $disasterType);
     }
 
     /**
