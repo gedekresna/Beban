@@ -123,4 +123,11 @@ class UsersController extends Controller
     {
         //
     }
+
+    public function logout(Request $request){
+        $accessToken = auth()->user()->token();
+        $token = $request->user()->tokens->find($accessToken);
+        $token->revoke();
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Logout Success');
+    }
 }

@@ -22,9 +22,12 @@ use App\Http\Controllers\UsersController;
 
 Route::post('/login',[UsersController::class,'login']);
 Route::post('/register',[UsersController::class,'register']);
+Route::get('/logout',[UsersController::class,'logout']);
 
 Route::get('/disasters',[DisastersController::class,'index']);
 Route::post('/disasters',[DisastersController::class,'post']);
 Route::get('/disasters/{id}',[DisastersController::class,'show']);
 Route::put('/disasters/{id}',[DisastersController::class,'update']);
 Route::delete('/disasters/{id}',[DisastersController::class,'delete']);
+
+// Route::resource('/disasters',DisastersController::class);
