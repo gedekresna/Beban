@@ -58,7 +58,7 @@ class UsersController extends Controller
         if($validator->fails()){
             return $validator->errors();
         }
-        
+
         $data = $validator->validated();
         $data['password'] = Hash::make($data['password']);
 
@@ -66,7 +66,7 @@ class UsersController extends Controller
         return ClientResponse::successResponse(Response::HTTP_OK, 'Registration Success', ['access_token' => $token, 'type' => 'Bearer']);
 
     }
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -125,9 +125,7 @@ class UsersController extends Controller
     }
 
     public function logout(Request $request){
-        $accessToken = auth()->user()->token();
-        $token = $request->user()->tokens->find($accessToken);
-        $token->revoke();
+        auth('sanctum')->user()->tokens()->delete();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Logout Success');
     }
 }
