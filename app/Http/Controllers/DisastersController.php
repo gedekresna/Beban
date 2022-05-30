@@ -42,10 +42,6 @@ class DisastersController extends Controller
             return ClientResponse::errorValidatonResponse(Response::HTTP_BAD_REQUEST, $validator->errors());
         }
         $data = $validator->validated();
-        // if($request->user()->cannot('create',Disasters::class)){
-        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to create resource');
-        // }
-        // dd($data);
         $disasters = Disasters::create([
             'user_id' => auth()->id(),
             'latitude' => $data['latitude'],
@@ -68,9 +64,9 @@ class DisastersController extends Controller
     public function show($id,Request $request)
     {
         $disasters = Disasters::findOrFail($id);
-        // if($request->user()->cannot('view', $disasters)){
-        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to see this resource');
-        // }
+        if($request->user()->cannot('view', $disasters)){
+            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to see this resource');
+        }
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success get disaster location', $disasters);
     }
 
@@ -97,9 +93,9 @@ class DisastersController extends Controller
         }
         $data = $validator->validated();
         $disasters = Disasters::findOrFail($id);
-        // if($request->user()->cannot('update', $disasters)){
-        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update this resource');
-        // }
+        if($request->user()->cannot('update', $disasters)){
+            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update this resource');
+        }
         $disasters->update($data);
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success update disaster location', $disasters);
     }
@@ -113,9 +109,9 @@ class DisastersController extends Controller
     public function destroy(Request $request, $id)
     {
         $disasters = Disasters::findOrFail($id);
-        // if($request->user()->cannot('delete', $disasters)){
-        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this resource');
-        // }
+        if($request->user()->cannot('delete', $disasters)){
+            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this resource');
+        }
         $disasters->delete();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success delete location', $disasters);
     }

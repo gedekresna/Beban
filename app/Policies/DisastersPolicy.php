@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Disasters;
-use App\Models\User;
+use App\Models\Users;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DisastersPolicy
@@ -16,7 +16,7 @@ class DisastersPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(Users $user)
     {
         //
     }
@@ -28,9 +28,9 @@ class DisastersPolicy
      * @param  \App\Models\Disasters  $disasters
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Disasters $disasters)
+    public function view(Users $user, Disasters $disasters)
     {
-        //
+        return $user->id === $disasters->user_id;
     }
 
     /**
@@ -39,7 +39,7 @@ class DisastersPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(Users $user)
     {
         //
     }
@@ -51,9 +51,9 @@ class DisastersPolicy
      * @param  \App\Models\Disasters  $disasters
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Disasters $disasters)
+    public function update(Users $user, Disasters $disasters)
     {
-        //
+        return $user->id === $disasters->user_id;
     }
 
     /**
@@ -63,9 +63,9 @@ class DisastersPolicy
      * @param  \App\Models\Disasters  $disasters
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Disasters $disasters)
+    public function delete(Users $user, Disasters $disasters)
     {
-        //
+        return $user->id === $disasters->user_id;
     }
 
     /**
@@ -75,7 +75,7 @@ class DisastersPolicy
      * @param  \App\Models\Disasters  $disasters
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Disasters $disasters)
+    public function restore(Users $user, Disasters $disasters)
     {
         //
     }
@@ -87,7 +87,7 @@ class DisastersPolicy
      * @param  \App\Models\Disasters  $disasters
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Disasters $disasters)
+    public function forceDelete(Users $user, Disasters $disasters)
     {
         //
     }

@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\DisasterTypes;
-use App\Models\User;
+use App\Models\Users;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DisasterTypesPolicy
@@ -16,7 +16,7 @@ class DisasterTypesPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(Users $user)
     {
         //
     }
@@ -28,7 +28,7 @@ class DisasterTypesPolicy
      * @param  \App\Models\DisasterTypes  $disasterTypes
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, DisasterTypes $disasterTypes)
+    public function view(Users $user, DisasterTypes $disasterTypes)
     {
         //
     }
@@ -39,9 +39,9 @@ class DisasterTypesPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(Users $user)
     {
-        //
+        return $user->role === "admin";
     }
 
     /**
@@ -51,9 +51,9 @@ class DisasterTypesPolicy
      * @param  \App\Models\DisasterTypes  $disasterTypes
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, DisasterTypes $disasterTypes)
+    public function update(Users $user)
     {
-        //
+        return $user->role === "admin";
     }
 
     /**
@@ -63,9 +63,9 @@ class DisasterTypesPolicy
      * @param  \App\Models\DisasterTypes  $disasterTypes
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, DisasterTypes $disasterTypes)
+    public function delete(Users $user)
     {
-        //
+        return $user->role === "admin";
     }
 
     /**
@@ -75,7 +75,7 @@ class DisasterTypesPolicy
      * @param  \App\Models\DisasterTypes  $disasterTypes
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, DisasterTypes $disasterTypes)
+    public function restore(Users $user, DisasterTypes $disasterTypes)
     {
         //
     }
@@ -87,7 +87,7 @@ class DisasterTypesPolicy
      * @param  \App\Models\DisasterTypes  $disasterTypes
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, DisasterTypes $disasterTypes)
+    public function forceDelete(Users $user, DisasterTypes $disasterTypes)
     {
         //
     }

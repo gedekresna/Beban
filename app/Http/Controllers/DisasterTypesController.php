@@ -18,6 +18,9 @@ class DisasterTypesController extends Controller
 
     public function store(Request $request)
     {
+        if($request->user()->cannot('create',DisasterTypes::class)){
+            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to create resource');
+        }
         $validator = Validator::make($request->all(),[
             'name' => 'required|string'
         ]);
@@ -27,9 +30,6 @@ class DisasterTypesController extends Controller
         }
 
         $data = $validator->validated();
-        // if($request->user()->cannot('create',Disasters::class)){
-        //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to create resource');
-        // }
         $disasterType = DisasterTypes::create([
             'name' => $data['name']
         ]);
@@ -45,6 +45,9 @@ class DisasterTypesController extends Controller
 
     public function update(Request $request, $id)
     {
+        if($request->user()->cannot('update',DisasterTypes::class)){
+            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update resource');
+        }
         $validator = Validator::make($request->all(),[
             'name' => 'required|string'
         ]);
@@ -61,8 +64,11 @@ class DisasterTypesController extends Controller
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success update disaster type', $disasterType);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if($request->user()->cannot('delete',DisasterTypes::class)){
+            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to delete resource');
+        }
         $disasterType = DisasterTypes::findOrFail($id);
         $disasterType->delete();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success delete disaster type');
