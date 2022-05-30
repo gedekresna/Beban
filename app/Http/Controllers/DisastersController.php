@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Disasters;
-use App\Models\ManyDisasters;
 use Illuminate\Http\Request;
 use App\Helpers\ClientResponse;
-use App\Http\Requests\StoreDisastersRequest;
-use App\Http\Requests\UpdateDisastersRequest;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class DisastersController extends Controller
@@ -20,17 +18,7 @@ class DisastersController extends Controller
     public function index()
     {
         $disasters = Disasters::where('user_id', auth()->id())->get();;
-        return ClientResponse::successResponse(Response::HTTP_OK, 'Success get locations', $disasters);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Success get list disasters location', $disasters);
     }
 
     /**
@@ -41,7 +29,19 @@ class DisastersController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->only(['address', 'description', 'postal_code', 'city', 'latitude', 'longitude', 'user_id', 'disaster_type_id']);
+        $validator = Validator::make($request->all(),[
+            'address' => 'required|string',
+            'description' => 'required|string',
+            'postal_code' => 'required|numeric',
+            'city' => 'required|string',
+            'latitude' => 'required|string|numeric',
+            'longitude' => 'required|string|numeric',
+        ]);
+
+        if($validator->fails()){
+            return ClientResponse::errorValidatonResponse(Response::HTTP_BAD_REQUEST, $validator->errors());
+        }
+        $data = $validator->validated();
         // if($request->user()->cannot('create',Disasters::class)){
         //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to create resource');
         // }
@@ -55,12 +55,7 @@ class DisastersController extends Controller
             'description' => $data['description']
         ]);
 
-        $manydisasters = ManyDisasters::create([
-            'disaster_id' => $disasters->id,
-            'disaster_type_id' => $data['disaster_type_id']
-        ]);
-
-        return ClientResponse::successResponse(Response::HTTP_OK, 'Success create location', $disasters);
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Success create disaster location', $disasters);
 
     }
 
@@ -76,18 +71,7 @@ class DisastersController extends Controller
         // if($request->user()->cannot('view', $disasters)){
         //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to see this resource');
         // }
-        return ClientResponse::successResponse(Response::HTTP_OK, 'Success get location', $disasters);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Disasters  $disasters
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Request $request, $id)
-    {
-        //
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Success get disaster location', $disasters);
     }
 
     /**
@@ -99,13 +83,25 @@ class DisastersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->only(['description', 'city', 'postal_code', 'latitude', 'longitude']);
+        $validator = Validator::make($request->all(),[
+            'address' => 'required|string',
+            'description' => 'required|string',
+            'postal_code' => 'required|numeric',
+            'city' => 'required|string',
+            'latitude' => 'required|string|numeric',
+            'longitude' => 'required|string|numeric',
+        ]);
+
+        if($validator->fails()){
+            return ClientResponse::errorValidatonResponse(Response::HTTP_BAD_REQUEST, $validator->errors());
+        }
+        $data = $validator->validated();
         $disasters = Disasters::findOrFail($id);
         // if($request->user()->cannot('update', $disasters)){
         //     return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update this resource');
         // }
         $disasters->update($data);
-        return ClientResponse::successResponse(Response::HTTP_OK, 'Success update location', $disasters);
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Success update disaster location', $disasters);
     }
 
     /**

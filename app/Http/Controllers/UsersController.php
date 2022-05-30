@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Users;
 use Illuminate\Http\Request;
-// use GuzzleHttp\Psr7\Request;
 use App\Helpers\ClientResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,16 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function login(Request $request){
 
         $validator = Validator::make($request->all(),[
@@ -32,7 +21,7 @@ class UsersController extends Controller
             'password' => 'required',
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return ClientResponse::errorValidatonResponse(Response::HTTP_BAD_REQUEST, $validator->errors());
         }
         $data = $validator->validated();
         if(!Auth::attempt($data)){
@@ -56,7 +45,7 @@ class UsersController extends Controller
             'password' => 'required|min:5|max:255'
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return ClientResponse::errorValidatonResponse(Response::HTTP_BAD_REQUEST, $validator->errors());
         }
 
         $data = $validator->validated();
@@ -67,61 +56,8 @@ class UsersController extends Controller
 
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreUsersRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreUsersRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Users $users)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Users $users)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateUsersRequest  $request
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateUsersRequest $request, Users $users)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Users $users)
-    {
-        //
+    public function show(){
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Success show user', auth()->user());
     }
 
     public function logout(Request $request){

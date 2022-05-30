@@ -9,5 +9,5 @@ class Disasters extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['address', 'description', 'postal_code', 'latitude', 'longitude', 'user_id', 'disaster_type_id'];
+    protected $fillable = ['address', 'description', 'postal_code', 'latitude', 'longitude', 'user_id'];
 }

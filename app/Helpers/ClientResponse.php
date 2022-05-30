@@ -19,5 +19,12 @@ class ClientResponse{
         ],$status);
     }
 
+    public static function errorValidatonResponse($status, $validation){
+        return response()->json([
+            'status' => $status,
+            'message' => "Error on Validation",
+            'validation' => $validation
+        ],$status);
+    }
 }
 ?>

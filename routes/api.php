@@ -26,13 +26,11 @@ Route::post('/register',[UsersController::class,'register']);
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/logout',[UsersController::class,'logout']);
-    Route::get('/disasters',[DisastersController::class,'index']);
-    Route::post('/disasters',[DisastersController::class,'store']);
-    Route::get('/disasters/{id}',[DisastersController::class,'show']);
-    Route::put('/disasters/{id}',[DisastersController::class,'update']);
-    Route::delete('/disasters/{id}',[DisastersController::class,'delete']);
-
-    Route::post('/disaster/types',[DisasterTypesController::class,'store']);
+    Route::get('/user',[UsersController::class,'show']);
+    Route::apiResource('/disasters', DisastersController::class)->parameters([
+        'disasters' => 'id'
+    ]);
+    Route::apiResource('/disaster-types', DisasterTypesController::class)->parameters([
+        'disaster-types' => 'id'
+    ]);
 });
-
-// Route::resource('/disasters',DisastersController::class);
