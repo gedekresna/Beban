@@ -33,9 +33,10 @@ class DisastersController extends Controller
             'address' => 'required|string',
             'description' => 'required|string',
             'postal_code' => 'required|numeric',
-            'city' => 'required|string',
             'latitude' => 'required|string|numeric',
             'longitude' => 'required|string|numeric',
+            'disaster_types' => 'required|array',
+            'disaster_types.*' => 'exists:disasters,id'
         ]);
 
         if($validator->fails()){
@@ -50,7 +51,7 @@ class DisastersController extends Controller
             'postal_code' => $data['postal_code'],
             'description' => $data['description']
         ]);
-
+        $disasters->types()->attach($data['disaster_types']);
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success create disaster location', $disasters);
 
     }
@@ -83,9 +84,10 @@ class DisastersController extends Controller
             'address' => 'required|string',
             'description' => 'required|string',
             'postal_code' => 'required|numeric',
-            'city' => 'required|string',
             'latitude' => 'required|string|numeric',
             'longitude' => 'required|string|numeric',
+            'disaster_types' => 'required|array',
+            'disaster_types.*' => 'exists:disasters,id'
         ]);
 
         if($validator->fails()){
@@ -97,6 +99,7 @@ class DisastersController extends Controller
             return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update this resource');
         }
         $disasters->update($data);
+        $disasters->types()->sync($data['disaster_types']);
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success update disaster location', $disasters);
     }
 
@@ -112,6 +115,7 @@ class DisastersController extends Controller
         if($request->user()->cannot('delete', $disasters)){
             return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this resource');
         }
+        $disasters->types()->detach();
         $disasters->delete();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success delete location', $disasters);
     }
