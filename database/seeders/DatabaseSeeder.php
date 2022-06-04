@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // You can uncomment DisasterTypesSeeder if you wish to use static data and also for production
         $this->call([
             UsersSeeder::class,
             DisastersSeeder::class,
-            DisasterTypesSeeder::class
+            // DisasterTypesSeeder::class
         ]);
     }
 }

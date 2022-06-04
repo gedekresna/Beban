@@ -15,6 +15,6 @@ class Disasters extends Model
     protected $with = ['types'];
 
     public function types(){
-        return $this->belongsToMany(DisasterTypes::class, 'many_disasters', 'disaster_id', 'disaster_type_id')->select('name');
+        return $this->belongsToMany(DisasterTypes::class, 'many_disasters', 'disaster_id', 'disaster_type_id');
     }
 }

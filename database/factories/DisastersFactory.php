@@ -19,7 +19,7 @@ class DisastersFactory extends Factory
         return [
             'postal_code' => $this->faker->postcode(),
             'address' => $this->faker->address(),
-            'description' => $this->faker->paragraph(),
+            'description' => $this->faker->text(),
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
             'user_id' => $this->faker->numberBetween(1, 10)

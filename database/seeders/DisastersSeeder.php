@@ -15,6 +15,9 @@ class DisastersSeeder extends Seeder
      */
     public function run()
     {
-        Disasters::factory(10)->create();
+        // For Database factory many to many relationship testing
+        Disasters::factory(5)->has(\App\Models\DisasterTypes::factory()->count(1), 'types')->create();
+        // If you wish to only create fake disaster data, use script below
+        // Disasters::factory(10)->create();
     }
 }
