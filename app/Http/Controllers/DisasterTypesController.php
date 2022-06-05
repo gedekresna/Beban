@@ -70,6 +70,7 @@ class DisasterTypesController extends Controller
             return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to delete resource');
         }
         $disasterType = DisasterTypes::findOrFail($id);
+        $disasterType->disasters()->detach();
         $disasterType->delete();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success delete disaster type');
     }

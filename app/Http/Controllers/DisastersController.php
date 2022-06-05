@@ -36,7 +36,7 @@ class DisastersController extends Controller
             'latitude' => 'required|string|numeric',
             'longitude' => 'required|string|numeric',
             'disaster_types' => 'required|array',
-            'disaster_types.*' => 'exists:disasters,id'
+            'disaster_types.*' => 'exists:disaster_types,id'
         ]);
 
         if($validator->fails()){
@@ -87,7 +87,7 @@ class DisastersController extends Controller
             'latitude' => 'required|string|numeric',
             'longitude' => 'required|string|numeric',
             'disaster_types' => 'required|array',
-            'disaster_types.*' => 'exists:disasters,id'
+            'disaster_types.*' => 'exists:disaster_types,id'
         ]);
 
         if($validator->fails()){
