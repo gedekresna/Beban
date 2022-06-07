@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('many_disasters', function (Blueprint $table) {
             $table->foreignId('disaster_id')->constrained('disasters');
             $table->foreignId('disaster_type_id')->constrained('disaster_types');
+            $table->integer('count')->default(1);
+            $table->timestamps();
         });
     }
 

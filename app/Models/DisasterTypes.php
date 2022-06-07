@@ -13,6 +13,6 @@ class DisasterTypes extends Model
     protected $fillable = ['name'];
 
     public function disasters(){
-        return $this->belongsToMany(Disasters::class, 'many_disasters', 'disaster_type_id', 'disaster_id');
+        return $this->belongsToMany(Disasters::class, 'many_disasters', 'disaster_type_id', 'disaster_id')->withTimestamps()->withPivot('count');
     }
 }

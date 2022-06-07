@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DisastersController;
 use App\Http\Controllers\DisasterTypesController;
+use App\Http\Controllers\PublicController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
@@ -23,6 +24,10 @@ use App\Http\Controllers\UsersController;
 
 Route::post('/login',[UsersController::class,'login']);
 Route::post('/register',[UsersController::class,'register']);
+
+Route::prefix('public')->group(function(){
+    Route::get('/disaster/{disasterId}/type/{typeId}', [PublicController::class, 'reportDisaster']);
+});
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/logout',[UsersController::class,'logout']);
