@@ -25,7 +25,10 @@ use App\Http\Controllers\UsersController;
 Route::post('/login',[UsersController::class,'login']);
 Route::post('/register',[UsersController::class,'register']);
 
+// This is used to store public API's
 Route::prefix('public')->group(function(){
+    Route::get('/disasters', [PublicController::class, 'getDisasters']);
+    Route::get('/disaster-types', [PublicController::class, 'getDisasterTypes']);
     Route::get('/disaster/{disasterId}/type/{typeId}', [PublicController::class, 'reportDisaster']);
 });
 

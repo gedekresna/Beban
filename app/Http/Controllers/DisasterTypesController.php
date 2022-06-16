@@ -12,7 +12,7 @@ class DisasterTypesController extends Controller
 {
     public function index()
     {
-        $disasterType = DisasterTypes::all();
+        $disasterType = DisasterTypes::withCount('disasters')->get();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success get list disaster types', $disasterType);
     }
 
