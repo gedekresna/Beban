@@ -29,7 +29,7 @@ class UsersController extends Controller
         }
         $user = Users::where('email', $data['email'])->firstOrFail();
         $token = $user->createToken('web-token')->plainTextToken;
-        return ClientResponse::successResponse(Response::HTTP_OK, 'Login Success', ['access_token' => $token, 'type' => 'Bearer']);
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Login Success', ['access_token' => $token, 'type' => 'Bearer', 'user' => $user]);
     }
 
     /**
@@ -50,9 +50,9 @@ class UsersController extends Controller
 
         $data = $validator->validated();
         $data['password'] = Hash::make($data['password']);
-
-        $token =  Users::create($data)->createToken('web-token')->plainTextToken;
-        return ClientResponse::successResponse(Response::HTTP_OK, 'Registration Success', ['access_token' => $token, 'type' => 'Bearer']);
+        $user = Users::create($data);
+        $token =  $user->createToken('web-token')->plainTextToken;
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Registration Success', ['access_token' => $token, 'type' => 'Bearer', 'user' => $user]);
 
     }
 
