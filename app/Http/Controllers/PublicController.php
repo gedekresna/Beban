@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PublicController extends Controller
 {
     public function getDisasters(){
-        $disasters = Disasters::all();
+        $disasters = Disasters::withSum('types as total_disasters', 'many_disasters.count')->get();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success get list disasters location', $disasters);
     }
 
