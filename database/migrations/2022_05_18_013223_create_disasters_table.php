@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('postal_code');
             $table->string('address');
+            $table->string('city');
             $table->text('description');
             $table->string('latitude');
             $table->string('longitude');

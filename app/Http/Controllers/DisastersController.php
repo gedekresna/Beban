@@ -32,6 +32,7 @@ class DisastersController extends Controller
         $validator = Validator::make($request->all(),[
             'address' => 'required|string',
             'description' => 'required|string',
+            'city' => 'required|string',
             'postal_code' => 'required|numeric',
             'latitude' => 'required|string|numeric',
             'longitude' => 'required|string|numeric',
@@ -48,6 +49,7 @@ class DisastersController extends Controller
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
             'address' => $data['address'],
+            'city' => $data['city'],
             'postal_code' => $data['postal_code'],
             'description' => $data['description']
         ]);
@@ -83,6 +85,7 @@ class DisastersController extends Controller
         $validator = Validator::make($request->all(),[
             'address' => 'required|string',
             'description' => 'required|string',
+            'city' => 'required|string',
             'postal_code' => 'required|numeric',
             'latitude' => 'required|string|numeric',
             'longitude' => 'required|string|numeric',
