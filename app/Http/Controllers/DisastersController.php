@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ClientResponse;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Gate;
 
 class DisastersController extends Controller
 {
@@ -124,14 +125,22 @@ class DisastersController extends Controller
     }
 
     public function reportDisaster(Request $request, $id){
-        // dd($request->disaster_types);
-        // dd($request->disaster_types[0]['count']);
+        $validator = Validator::make($request->all(),[
+            'disaster_types' => 'required|array',
+            'disaster_types.*.id' => 'required|exists:disaster_types,id',
+            'disaster_types.*.count' => 'required|numeric'
+        ]);
+        if($validator->fails()){
+            return ClientResponse::errorValidatonResponse(Response::HTTP_BAD_REQUEST, $validator->errors());
+        }
         $many_disasters = [];
         $disasters = Disasters::findOrFail($id);
+        if(Gate::denies('change-count', $disasters)){
+            return ClientResponse::errorResponse(Response::HTTP_FORBIDDEN, 'You are not allowed to update this resource');
+        }
         foreach($disasters->types as $key => $type){
             $many_disasters[$request->disaster_types[$key]['id']] = ['count' => $request->disaster_types[$key]['count']];
         }
-        // dd($many_disasters);
         $disasters->types()->sync($many_disasters);
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success report disaster count', $disasters);
     }
