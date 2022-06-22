@@ -30,6 +30,8 @@ Route::prefix('public')->group(function(){
     Route::get('/disasters/count', [PublicController::class, 'countDisasters']);
     Route::get('/disasters', [PublicController::class, 'getDisasters']);
     Route::get('/disaster-types', [PublicController::class, 'getDisasterTypes']);
+    Route::get('/disaster-types/city', [PublicController::class, 'getDisasterTypesByCity']);
+    Route::get('/disasters/city', [PublicController::class, 'getDisastersByCity']);
     // Route::get('/disaster/{disasterId}/type/{typeId}', [PublicController::class, 'reportDisaster']);
 });
 
