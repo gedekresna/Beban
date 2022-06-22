@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ManyDisasters extends Model
+class ManyDisasters extends Pivot
 {
-    use HasFactory;
+    protected $fillable = ['count'];
 
-    protected $fillable = ['disaster_id'];
-
-    const UPDATED_AT = null;
-    const CREATED_AT = null;
+    protected $casts = [
+        'created_at' => 'datetime:l, d M Y H:i:s',
+        'updated_at' => 'datetime:l, d M Y H:i:s',
+    ];
 }

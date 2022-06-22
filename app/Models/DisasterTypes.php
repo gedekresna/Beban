@@ -12,6 +12,11 @@ class DisasterTypes extends Model
 
     protected $fillable = ['name'];
 
+    protected $casts = [
+        'created_at' => 'datetime:D, d M Y',
+        'updated_at' => 'datetime:D, d M Y',
+    ];
+
     public function disasters(){
         return $this->belongsToMany(Disasters::class, 'many_disasters', 'disaster_type_id', 'disaster_id')->withTimestamps()->withPivot('count');
     }
