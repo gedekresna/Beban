@@ -122,4 +122,17 @@ class DisastersController extends Controller
         $disasters->delete();
         return ClientResponse::successResponse(Response::HTTP_OK, 'Success delete location', $disasters);
     }
+
+    public function reportDisaster(Request $request, $id){
+        // dd($request->disaster_types);
+        // dd($request->disaster_types[0]['count']);
+        $many_disasters = [];
+        $disasters = Disasters::findOrFail($id);
+        foreach($disasters->types as $key => $type){
+            $many_disasters[$request->disaster_types[$key]['id']] = ['count' => $request->disaster_types[$key]['count']];
+        }
+        // dd($many_disasters);
+        $disasters->types()->sync($many_disasters);
+        return ClientResponse::successResponse(Response::HTTP_OK, 'Success report disaster count', $disasters);
+    }
 }

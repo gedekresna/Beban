@@ -42,4 +42,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('/disaster-types', DisasterTypesController::class)->parameters([
         'disaster-types' => 'id'
     ]);
+    Route::post('/disasters/{id}/report', [DisastersController::class, 'reportDisaster']);
 });
